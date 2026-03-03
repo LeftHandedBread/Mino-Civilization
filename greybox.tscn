@@ -1,0 +1,52 @@
+[gd_scene load_steps=10 format=3 uid="uid://bnfs1xn43j3yu"]
+
+[ext_resource type="Script" path="res://player-movement.gd" id="1_1rc35"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_txex2"]
+
+[sub_resource type="Gradient" id="Gradient_pvovd"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0.627451, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1et5n"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8uv5c"]
+color_ramp = SubResource("Gradient_pvovd")
+noise = SubResource("FastNoiseLite_1et5n")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_phptt"]
+albedo_texture = SubResource("NoiseTexture2D_8uv5c")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mnlfy"]
+albedo_color = Color(0, 0.627451, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w3q7x"]
+material = SubResource("StandardMaterial3D_mnlfy")
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_3igsj"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(99, 0, 0, 0, -4.32743e-06, 1, 0, -99, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_txex2")
+surface_material_override/0 = SubResource("StandardMaterial3D_phptt")
+
+[node name="Player" type="Node3D" parent="."]
+script = ExtResource("1_1rc35")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 4, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("BoxMesh_w3q7x")
+skeleton = NodePath("../..")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Player"]
+transform = Transform3D(0.25, 0, 0, 0, 1, 0, 0, 0, 0.25, 0, 5.23566, 7.79318)
+shape = SubResource("SeparationRayShape3D_3igsj")
+
+[node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 0.80799, 0.589196, 0, -0.589196, 0.80799, 0, 0, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.599638, -0.780971, 0.174696, 0.592601, 0.580031, 0.558918, -0.537828, -0.231623, 0.810612, 0, 15.2999, 6.23875)
+shadow_enabled = true
+directional_shadow_mode = 0
