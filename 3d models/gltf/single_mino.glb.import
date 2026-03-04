@@ -15,9 +15,12 @@ dest_files=["res://.godot/imported/single_mino.glb-f228c6dbafadea9c5635d44f534e6
 
 nodes/root_type=""
 nodes/root_name=""
+nodes/root_script=null
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=true
 meshes/create_shadow_meshes=true
@@ -31,6 +34,84 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
-_subresources={}
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"meshes": {
+"single_mino_Cube": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://3d models/gltf/minoColors/single_mino_Cube.tres",
+"save_to_file/path": "uid://c4axgg6evr1uf"
+},
+"single_mino_Cube_002": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://3d models/gltf/minoColors/single_mino_Cube_002.tres",
+"save_to_file/path": "uid://cw10ph0s0ogjs"
+},
+"single_mino_Cube_003": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://3d models/gltf/minoColors/single_mino_Cube_003.tres",
+"save_to_file/path": "uid://c172g764hhr0e"
+},
+"single_mino_Cube_004": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://3d models/gltf/minoColors/single_mino_Cube_004.tres",
+"save_to_file/path": "uid://b30uof6c0qybf"
+},
+"single_mino_Cube_005": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://3d models/gltf/minoColors/single_mino_Cube_005.tres",
+"save_to_file/path": "uid://btc3a7j2k6qbe"
+},
+"single_mino_Cube_006": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://3d models/gltf/minoColors/single_mino_Cube_006.tres",
+"save_to_file/path": "uid://bn7oanxty8yrt"
+},
+"single_mino_Cube_007": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://3d models/gltf/minoColors/single_mino_Cube_007.tres",
+"save_to_file/path": "uid://dp4e10ym2pyk6"
+},
+"single_mino_Cube_008": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://3d models/gltf/minoColors/single_mino_Cube_008.tres",
+"save_to_file/path": "uid://bvj3osthvd3ev"
+}
+}
+}
 gltf/naming_version=1
 gltf/embedded_image_handling=1
