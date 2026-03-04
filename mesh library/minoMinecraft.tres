@@ -1,0 +1,68 @@
+[gd_resource type="MeshLibrary" format=3 uid="uid://cn04m5k8tpuo5"]
+
+[ext_resource type="ArrayMesh" uid="uid://cxkuy7brcb180" path="res://3d models/gltf/minoColors/single_mino_Cube.tres" id="1_3kdpw"]
+[ext_resource type="ArrayMesh" uid="uid://i1vni5saorkr" path="res://3d models/gltf/minoColors/single_mino_Cube_002.tres" id="2_v3yxu"]
+[ext_resource type="ArrayMesh" uid="uid://c08vkh2ukk4jq" path="res://3d models/gltf/minoColors/single_mino_Cube_003.tres" id="3_uq7lw"]
+[ext_resource type="ArrayMesh" uid="uid://ym0r0gteejye" path="res://3d models/gltf/minoColors/single_mino_Cube_004.tres" id="4_el74d"]
+[ext_resource type="ArrayMesh" uid="uid://dm0xh1cg3epvp" path="res://3d models/gltf/minoColors/single_mino_Cube_005.tres" id="5_gwpqo"]
+[ext_resource type="ArrayMesh" uid="uid://dnhfulwic1rpm" path="res://3d models/gltf/minoColors/single_mino_Cube_006.tres" id="6_o68d6"]
+[ext_resource type="ArrayMesh" uid="uid://bm8tupfhd8knp" path="res://3d models/gltf/minoColors/single_mino_Cube_007.tres" id="7_vkha2"]
+[ext_resource type="ArrayMesh" uid="uid://buy84x8f7n263" path="res://3d models/gltf/minoColors/single_mino_Cube_008.tres" id="8_m2ea0"]
+
+[resource]
+item/0/name = ""
+item/0/mesh = ExtResource("1_3kdpw")
+item/0/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/mesh_cast_shadow = 1
+item/0/shapes = []
+item/0/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/navigation_layers = 1
+item/1/name = ""
+item/1/mesh = ExtResource("2_v3yxu")
+item/1/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/1/mesh_cast_shadow = 1
+item/1/shapes = []
+item/1/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/1/navigation_layers = 1
+item/2/name = ""
+item/2/mesh = ExtResource("3_uq7lw")
+item/2/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/2/mesh_cast_shadow = 1
+item/2/shapes = []
+item/2/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/2/navigation_layers = 1
+item/3/name = ""
+item/3/mesh = ExtResource("4_el74d")
+item/3/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/3/mesh_cast_shadow = 1
+item/3/shapes = []
+item/3/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/3/navigation_layers = 1
+item/4/name = ""
+item/4/mesh = ExtResource("5_gwpqo")
+item/4/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/4/mesh_cast_shadow = 1
+item/4/shapes = []
+item/4/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/4/navigation_layers = 1
+item/5/name = ""
+item/5/mesh = ExtResource("6_o68d6")
+item/5/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/5/mesh_cast_shadow = 1
+item/5/shapes = []
+item/5/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/5/navigation_layers = 1
+item/6/name = ""
+item/6/mesh = ExtResource("7_vkha2")
+item/6/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/6/mesh_cast_shadow = 1
+item/6/shapes = []
+item/6/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/6/navigation_layers = 1
+item/7/name = ""
+item/7/mesh = ExtResource("8_m2ea0")
+item/7/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/7/mesh_cast_shadow = 1
+item/7/shapes = []
+item/7/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/7/navigation_layers = 1
