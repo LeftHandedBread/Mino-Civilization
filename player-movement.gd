@@ -6,20 +6,19 @@ signal locked_in_place
 @export var gridmap_path: NodePath = "../GridMap"
 @export var item_id: int = 0
 
+@export var spawn_cell: Vector3i = Vector3i(5, 10, 5)
 @export var pivot_cell: Vector3i = Vector3i(5, 10, 5)
+
+# If false, it will keep using whatever "offsets" is set to in the inspector.
+@export var use_random_pieces := true
 
 # Define the piece as offsets from pivot_cell
 @export var offsets: Array[Vector3i] = [
 	Vector3i(-1, 0, 0),
 	Vector3i( 0, 0, 0),
 	Vector3i( 1, 0, 0),
-	Vector3i( 2, 0, 0),
+	Vector3i( 0, 0, 1),
 ]
-
-# Playfield bounds (inclusive)
-@export var use_bounds := false
-@export var min_cell := Vector3i(0, 0, 0)
-@export var max_cell := Vector3i(9, 20, 9)
 
 # Gravity
 @export var fall_interval := 0.6
@@ -29,9 +28,29 @@ signal locked_in_place
 
 var _fall_accum := 0.0
 var _locked := false
+var _rng := RandomNumberGenerator.new()
+
+# IMPORTANT: untyped outer array (nested typed collections are not supported)
+const PIECES = [
+	# I
+	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(2,0,0)],
+	# O
+	[Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,0,1), Vector3i(1,0,1)],
+	# T
+	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,0,1)],
+	# L
+	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(1,0,1)],
+	# J
+	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(-1,0,1)],
+	# S
+	[Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,0,1), Vector3i(-1,0,1)],
+	# Z
+	[Vector3i(0,0,0), Vector3i(-1,0,0), Vector3i(0,0,1), Vector3i(1,0,1)],
+]
 
 func _ready() -> void:
-	_place_piece(pivot_cell, offsets)
+	_rng.randomize()
+	spawn_new_piece()
 
 func _physics_process(delta: float) -> void:
 	if _locked:
@@ -40,34 +59,25 @@ func _physics_process(delta: float) -> void:
 	_fall_accum += delta
 	while _fall_accum >= fall_interval:
 		_fall_accum -= fall_interval
-		if not _try_move(gravity_dir):
-			_locked = false
-			emit_signal("locked_in_place")
-			return
+		_try_move(gravity_dir)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _locked:
-		return
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 
-	# Movement (arrow keys)
-	if event.is_action_pressed("ui_up"):
+	if event.keycode == KEY_W:
 		_try_move(Vector3i(0, 0, -1))   # forward (-Z)
-	elif event.is_action_pressed("ui_down"):
+	elif event.keycode == KEY_S:
 		_try_move(Vector3i(0, 0,  1))   # back (+Z)
-	elif event.is_action_pressed("ui_left"):
+	elif event.keycode == KEY_A:
 		_try_move(Vector3i(-1, 0, 0))   # left (-X)
-	elif event.is_action_pressed("ui_right"):
+	elif event.keycode == KEY_D:
 		_try_move(Vector3i( 1, 0, 0))   # right (+X)
 
-	# Rotation (direct keycodes so you don't have to add InputMap actions)
 	elif event.keycode == KEY_Q:
 		_try_rotate(Vector3i(0, 1, 0), -1) # Y CCW
 	elif event.keycode == KEY_E:
 		_try_rotate(Vector3i(0, 1, 0),  1) # Y CW
-
-	# Optional extra axes for true 3D tetris pieces:
 	elif event.keycode == KEY_R:
 		_try_rotate(Vector3i(1, 0, 0),  1) # X CW
 	elif event.keycode == KEY_F:
@@ -77,9 +87,49 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.keycode == KEY_C:
 		_try_rotate(Vector3i(0, 0, 1), -1) # Z CCW
 
+	elif event.keycode == KEY_X:
+		_lock_and_spawn()
+
+func _lock_and_spawn() -> void:
+	_locked = true
+	emit_signal("locked_in_place")
+	call_deferred("spawn_new_piece")
+
+func spawn_new_piece() -> void:
+	_fall_accum = 0.0
+	_locked = false
+
+	var new_offsets: Array[Vector3i]
+
+	if use_random_pieces:
+		var idx := _rng.randi_range(0, PIECES.size() - 1)
+		new_offsets = _to_vec3i_array(PIECES[idx])
+	else:
+		new_offsets = _to_vec3i_array(offsets) # copy inspector offsets
+
+	var new_pivot := spawn_cell
+
+	# IMPORTANT: ignore_current = false when spawning (locked stack must count)
+	if not _can_place(new_pivot, new_offsets, false):
+		_locked = true
+		print("GAME OVER: spawn blocked at ", new_pivot)
+		return
+
+	pivot_cell = new_pivot
+	offsets = new_offsets
+	_place_piece(pivot_cell, offsets)
+
+func _to_vec3i_array(raw: Array) -> Array[Vector3i]:
+	# Converts any Array into a fresh typed Array[Vector3i]
+	var out: Array[Vector3i] = []
+	out.resize(raw.size())
+	for i in raw.size():
+		out[i] = raw[i] as Vector3i
+	return out
+
 func _try_move(delta: Vector3i) -> bool:
 	var target_pivot := pivot_cell + delta
-	if not _can_place(target_pivot, offsets):
+	if not _can_place(target_pivot, offsets, true):
 		return false
 
 	_erase_piece(pivot_cell, offsets)
@@ -88,25 +138,23 @@ func _try_move(delta: Vector3i) -> bool:
 	return true
 
 func _try_rotate(axis: Vector3i, dir: int) -> bool:
-	# dir: +1 or -1 (90 degrees)
 	var rotated: Array[Vector3i] = []
 	rotated.resize(offsets.size())
 	for i in offsets.size():
 		rotated[i] = _rot90(offsets[i], axis, dir)
 
-	# Simple wall-kicks: try rotation in place, then tiny shifts
 	var kicks: Array[Vector3i] = [
 		Vector3i.ZERO,
 		Vector3i( 1, 0, 0), Vector3i(-1, 0, 0),
 		Vector3i( 0, 0, 1), Vector3i( 0, 0,-1),
 		Vector3i( 1, 0, 1), Vector3i( 1, 0,-1),
 		Vector3i(-1, 0, 1), Vector3i(-1, 0,-1),
-		Vector3i( 0, 1, 0), # small "up" kick (helps near floors/stack)
+		Vector3i( 0, 1, 0),
 	]
 
 	for k in kicks:
 		var new_pivot := pivot_cell + k
-		if _can_place(new_pivot, rotated):
+		if _can_place(new_pivot, rotated, true):
 			_erase_piece(pivot_cell, offsets)
 			pivot_cell = new_pivot
 			offsets = rotated
@@ -116,25 +164,19 @@ func _try_rotate(axis: Vector3i, dir: int) -> bool:
 	return false
 
 func _rot90(v: Vector3i, axis: Vector3i, dir: int) -> Vector3i:
-	# dir: +1 or -1 (90 degrees)
-	# Right-handed grid axes: X right, Y up, Z back
-
 	if axis == Vector3i(0, 1, 0):
-		# rotate around Y: (x,z) -> ( z,-x ) or (-z, x)
 		if dir > 0:
 			return Vector3i(v.z, v.y, -v.x)
 		else:
 			return Vector3i(-v.z, v.y, v.x)
 
 	elif axis == Vector3i(1, 0, 0):
-		# rotate around X: (y,z) -> (-z, y) or (z,-y)
 		if dir > 0:
 			return Vector3i(v.x, -v.z, v.y)
 		else:
 			return Vector3i(v.x, v.z, -v.y)
 
 	elif axis == Vector3i(0, 0, 1):
-		# rotate around Z: (x,y) -> (-y, x) or (y,-x)
 		if dir > 0:
 			return Vector3i(-v.y, v.x, v.z)
 		else:
@@ -149,17 +191,13 @@ func _piece_cells(pivot: Vector3i, offs: Array[Vector3i]) -> Array[Vector3i]:
 		cells[i] = pivot + offs[i]
 	return cells
 
-func _can_place(pivot: Vector3i, offs: Array[Vector3i]) -> bool:
-	# Cells currently occupied by THIS active piece (so we can ignore them during checks)
+func _can_place(pivot: Vector3i, offs: Array[Vector3i], ignore_current: bool) -> bool:
 	var current := {}
-	for c in _piece_cells(pivot_cell, offsets):
-		current[c] = true
+	if ignore_current:
+		for c in _piece_cells(pivot_cell, offsets):
+			current[c] = true
 
 	for c in _piece_cells(pivot, offs):
-		if use_bounds and (c.x < min_cell.x or c.y < min_cell.y or c.z < min_cell.z
-			or c.x > max_cell.x or c.y > max_cell.y or c.z > max_cell.z):
-			return false
-
 		var occ := gridmap.get_cell_item(c)
 		if occ != -1 and not current.has(c):
 			return false
