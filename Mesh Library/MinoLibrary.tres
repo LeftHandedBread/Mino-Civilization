@@ -1,0 +1,16 @@
+[gd_resource type="MeshLibrary" format=3 uid="uid://bg5vfyb3nqvvq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0qtld"]
+albedo_color = Color(0.5058824, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hbfap"]
+material = SubResource("StandardMaterial3D_0qtld")
+
+[resource]
+item/0/name = "Mino"
+item/0/mesh = SubResource("BoxMesh_hbfap")
+item/0/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/mesh_cast_shadow = 1
+item/0/shapes = []
+item/0/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/navigation_layers = 1

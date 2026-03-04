@@ -1,64 +1,79 @@
+# ActivePiece.gd (Godot 4)
 extends Node3D
 
-enum Facing { NORTH, EAST, SOUTH, WEST }
+@onready var gridmap_path = $"../GridMap"
+@export var item_id: int = 0              # MeshLibrary item index for your cube/block
+@export var pivot_cell: Vector3i = Vector3i(5, 10, 5)
 
-@export var step_size := 1.0
+# Offsets (relative to pivot) that define the current piece shape.
+# Example: a simple 4-block "I" piece along X:
+@export var offsets: Array[Vector3i] = [
+	Vector3i(-1, 0, 0),
+	Vector3i( 0, 0, 0),
+	Vector3i( 1, 0, 0),
+	Vector3i( 2, 0, 0),
+]
 
-var facing: Facing = Facing.NORTH
-const FACING_ORDER := [Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST]
+# Optional playfield bounds (inclusive). Turn off by setting use_bounds = false.
+@export var use_bounds := true
+@export var min_cell := Vector3i(0, 0, 0)
+@export var max_cell := Vector3i(9, 20, 9)
+
+@onready var gridmap: GridMap = get_node(gridmap_path)
+
+func _ready() -> void:
+	_place_piece(pivot_cell)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 
 	if event.is_action_pressed("ui_up"):
-		# step forward in the direction we're currently facing
-		global_position += forward_vector(facing) * step_size
-
+		try_move(Vector3i(0, 0, -1))   # forward (-Z)
 	elif event.is_action_pressed("ui_down"):
-		rotation_handler("back")
-
+		try_move(Vector3i(0, 0,  1))   # back (+Z)
 	elif event.is_action_pressed("ui_left"):
-		rotation_handler("left")
-
+		try_move(Vector3i(-1, 0, 0))   # left (-X)
 	elif event.is_action_pressed("ui_right"):
-		rotation_handler("right")
+		try_move(Vector3i( 1, 0, 0))   # right (+X)
 
+func try_move(delta: Vector3i) -> void:
+	var target_pivot := pivot_cell + delta
+	if not _can_place(target_pivot):
+		return
 
-func rotation_handler(key: String) -> void:
-	match key:
-		"left":
-			_set_facing(_turn(facing, -1))   # -1 = 90° left
-		"right":
-			_set_facing(_turn(facing, +1))   # +1 = 90° right
-		"back":
-			_set_facing(_turn(facing, +2))   # +2 = 180°
+	_erase_piece(pivot_cell)
+	pivot_cell = target_pivot
+	_place_piece(pivot_cell)
 
+func _piece_cells(pivot: Vector3i) -> Array[Vector3i]:
+	var cells: Array[Vector3i] = []
+	cells.resize(offsets.size())
+	for i in offsets.size():
+		cells[i] = pivot + offsets[i]
+	return cells
 
-func _turn(current: Facing, steps: int) -> Facing:
-	# Enum values are 0..3, so we can wrap with modulo
-	var i := int(current)
-	i = (i + steps) % 4
-	if i < 0:
-		i += 4
-	return FACING_ORDER[i]
+func _can_place(pivot: Vector3i) -> bool:
+	var current := {}
+	for c in _piece_cells(pivot_cell):
+		current[c] = true
 
+	for c in _piece_cells(pivot):
+		if use_bounds and (c.x < min_cell.x or c.y < min_cell.y or c.z < min_cell.z
+			or c.x > max_cell.x or c.y > max_cell.y or c.z > max_cell.z):
+			return false
 
-func _set_facing(new_facing: Facing) -> void:
-	facing = new_facing
+		var occ := gridmap.get_cell_item(c)
+		# allow overlapping our *current* cells (since we erase after validation)
+		if occ != -1 and not current.has(c):
+			return false
 
-	# Set absolute yaw (recommended) instead of accumulating rotate_object_local
-	match facing:
-		Facing.NORTH: rotation.y = deg_to_rad(0)
-		Facing.EAST:  rotation.y = deg_to_rad(-90)
-		Facing.SOUTH: rotation.y = deg_to_rad(180)
-		Facing.WEST:  rotation.y = deg_to_rad(90)
+	return true
 
+func _place_piece(pivot: Vector3i) -> void:
+	for c in _piece_cells(pivot):
+		gridmap.set_cell_item(c, item_id)
 
-func forward_vector(dir: Facing) -> Vector3:
-	match dir:
-		Facing.NORTH: return Vector3.FORWARD  # (0,0,-1)
-		Facing.SOUTH: return Vector3.BACK     # (0,0, 1)
-		Facing.EAST:  return Vector3.RIGHT    # (1,0, 0)
-		Facing.WEST:  return Vector3.LEFT     # (-1,0,0)
-	return Vector3.ZERO
+func _erase_piece(pivot: Vector3i) -> void:
+	for c in _piece_cells(pivot):
+		gridmap.set_cell_item(c, -1)
