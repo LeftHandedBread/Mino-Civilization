@@ -4,10 +4,10 @@ extends Node3D
 signal locked_in_place
 
 @export var gridmap_path: NodePath = "../GridMap"
-@export var item_id: int = 0
+@export var item_id: int = 1
 
-@export var spawn_cell: Vector3i = Vector3i(5, 10, 5)
-@export var pivot_cell: Vector3i = Vector3i(5, 10, 5)
+@export var spawn_cell: Vector3i = Vector3i(0, 5, 0)
+@export var pivot_cell: Vector3i = Vector3i(0, 5, 0)
 
 # If false, it will keep using whatever "offsets" is set to in the inspector.
 @export var use_random_pieces := true
@@ -118,6 +118,14 @@ func spawn_new_piece() -> void:
 	pivot_cell = new_pivot
 	offsets = new_offsets
 	_place_piece(pivot_cell, offsets)
+	_sync_anchor_to_pivot()
+	
+func _cell_to_world(c: Vector3i) -> Vector3:
+	# GridMap cell -> world position (center of cell)
+	return gridmap.to_global(gridmap.map_to_local(c))
+
+func _sync_anchor_to_pivot() -> void:
+	global_position = _cell_to_world(pivot_cell)
 
 func _to_vec3i_array(raw: Array) -> Array[Vector3i]:
 	# Converts any Array into a fresh typed Array[Vector3i]
@@ -207,6 +215,9 @@ func _can_place(pivot: Vector3i, offs: Array[Vector3i], ignore_current: bool) ->
 func _place_piece(pivot: Vector3i, offs: Array[Vector3i]) -> void:
 	for c in _piece_cells(pivot, offs):
 		gridmap.set_cell_item(c, item_id)
+	# make this Node3D sit on the active piece so the camera can follow it
+	if pivot == pivot_cell:
+		_sync_anchor_to_pivot()
 
 func _erase_piece(pivot: Vector3i, offs: Array[Vector3i]) -> void:
 	for c in _piece_cells(pivot, offs):
