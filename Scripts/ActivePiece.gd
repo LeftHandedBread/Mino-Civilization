@@ -4,6 +4,8 @@ extends Node3D
 signal locked_in_place
 
 @export var gridmap_path: NodePath = "../GridMap"
+@export var camera_path: NodePath = "../Camera3D"
+@onready var cam: Node = get_node_or_null(camera_path)
 @export var item_id: int = 1
 
 @export var spawn_cell: Vector3i = Vector3i(0, 5, 0)
@@ -83,6 +85,27 @@ func _unhandled_input(event: InputEvent) -> void:
 		_try_rotate(Vector3i(0, 0, 1), -1) # Z CCW
 	elif event.keycode == KEY_X:
 		_lock_and_spawn()
+
+func _cam_step() -> int:
+	if cam and cam.has_method("get_base_yaw_step"):
+		return int(cam.call("get_base_yaw_step"))
+	return 0
+
+func _rot_y_steps(v: Vector3i, steps: int) -> Vector3i:
+	var s := ((steps % 4) + 4) % 4
+	var x := v.x
+	var z := v.z
+	match s:
+		0:
+			return v
+		1:
+			return Vector3i(z, v.y, -x)     # +90° around Y
+		2:
+			return Vector3i(-x, v.y, -z)    # 180°
+		3:
+			return Vector3i(-z, v.y, x)     # -90°
+		_:
+			return v
 
 func _lock_and_spawn() -> void:
 	_locked = true
