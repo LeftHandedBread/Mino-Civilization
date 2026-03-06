@@ -57,6 +57,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_PERIOD:
 			_rotate_base_yaw(1)
 
+func snap_yaw(dir: int) -> void:
+	# dir is +1 or -1 (90° steps)
+	_base_yaw_step = (_base_yaw_step + dir) % 4
+
 func _rotate_base_yaw(dir: int) -> void:
 	_base_yaw_step = (_base_yaw_step + dir) % 4
 
@@ -75,6 +79,9 @@ func _set_drag_yaw(v: float) -> void:
 
 func _set_drag_pitch(v: float) -> void:
 	_drag_pitch = v
+
+func get_base_yaw_step() -> int:
+	return _base_yaw_step
 
 func _process(delta: float) -> void:
 	if not is_instance_valid(target):

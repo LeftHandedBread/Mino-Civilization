@@ -63,18 +63,22 @@ func _physics_process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
+	var step := _cam_step()
+	
 	if event.keycode == KEY_W:
-		_try_move(Vector3i(0, 0, -1))   # forward (-Z)
+		_try_move(_rot_y_steps(Vector3i(0, 0, -1), step))
 	elif event.keycode == KEY_S:
-		_try_move(Vector3i(0, 0,  1))   # back (+Z)
+		_try_move(_rot_y_steps(Vector3i(0, 0, 1), step))
 	elif event.keycode == KEY_A:
-		_try_move(Vector3i(-1, 0, 0))   # left (-X)
+		_try_move(_rot_y_steps(Vector3i(-1, 0, 0), step))
 	elif event.keycode == KEY_D:
-		_try_move(Vector3i( 1, 0, 0))   # right (+X)
+		_try_move(_rot_y_steps(Vector3i( 1, 0, 0), step))
 	elif event.keycode == KEY_Q:
-		_try_rotate(Vector3i(0, 1, 0), -1) # Y CCW
+		if _try_rotate(Vector3i(0, 1, 0), -1): # Y CCW
+			_cam_snap_yaw(-1)
 	elif event.keycode == KEY_E:
-		_try_rotate(Vector3i(0, 1, 0),  1) # Y CW
+		if _try_rotate(Vector3i(0, 1, 0),  1): # Y CW
+			_cam_snap_yaw(1)
 	elif event.keycode == KEY_R:
 		_try_rotate(Vector3i(1, 0, 0),  1) # X CW
 	elif event.keycode == KEY_F:
@@ -96,16 +100,15 @@ func _rot_y_steps(v: Vector3i, steps: int) -> Vector3i:
 	var x := v.x
 	var z := v.z
 	match s:
-		0:
-			return v
-		1:
-			return Vector3i(z, v.y, -x)     # +90° around Y
-		2:
-			return Vector3i(-x, v.y, -z)    # 180°
-		3:
-			return Vector3i(-z, v.y, x)     # -90°
-		_:
-			return v
+		0: return v
+		1: return Vector3i(z, v.y, -x)     # +90° around Y
+		2: return Vector3i(-x, v.y, -z)    # 180°
+		3: return Vector3i(-z, v.y, x)     # -90°
+		_: return v
+
+func _cam_snap_yaw(dir: int) -> void:
+	if cam and cam.has_method("snap_yaw"):
+		cam.call("snap_yaw", dir)
 
 func _lock_and_spawn() -> void:
 	_locked = true

@@ -1,17 +1,18 @@
 [gd_resource type="MeshLibrary" format=3 uid="uid://cpms8wpkr0sys"]
 
-[ext_resource type="ArrayMesh" uid="uid://cv27qv5i264pf" path="res://3d models/gltf/proper minos/single_mino_Cube_008.res" id="1_2u0md"]
-[ext_resource type="ArrayMesh" uid="uid://ciyxcvmn6bqgw" path="res://3d models/gltf/proper minos/single_mino_Cube_005.res" id="2_girpi"]
-[ext_resource type="ArrayMesh" uid="uid://d0d5kt2miedat" path="res://3d models/gltf/proper minos/single_mino_Cube_007.res" id="3_x1ftk"]
-[ext_resource type="ArrayMesh" uid="uid://dbdqci6hn6da8" path="res://3d models/gltf/proper minos/single_mino_Cube_003.res" id="4_lmcky"]
-[ext_resource type="ArrayMesh" uid="uid://dj7ygtyreyx7u" path="res://3d models/gltf/proper minos/single_mino_Cube_004.res" id="5_wkgov"]
-[ext_resource type="ArrayMesh" uid="uid://cgb2yu3lu3bpl" path="res://3d models/gltf/proper minos/single_mino_Cube_002.res" id="6_v0yb8"]
-[ext_resource type="ArrayMesh" uid="uid://cnpy3vfwpb08p" path="res://3d models/gltf/proper minos/single_mino_Cube_006.res" id="7_j1pr4"]
-[ext_resource type="ArrayMesh" uid="uid://bnoaccdgtkjd4" path="res://3d models/gltf/proper minos/single_mino_Cube.res" id="8_ak4ap"]
+[ext_resource type="ArrayMesh" uid="uid://cmqas1k0tv5xg" path="res://3d models/gltf/proper minos/single_mino_Cube_005.res" id="2_girpi"]
+[ext_resource type="ArrayMesh" uid="uid://bg6a27ou7clk5" path="res://3d models/gltf/proper minos/single_mino_Cube_007.res" id="3_x1ftk"]
+[ext_resource type="ArrayMesh" uid="uid://2vexh1pte6g0" path="res://3d models/gltf/proper minos/single_mino_Cube_003.res" id="4_lmcky"]
+[ext_resource type="ArrayMesh" uid="uid://cvjb2yitniok" path="res://3d models/gltf/proper minos/single_mino_Cube_004.res" id="5_wkgov"]
+[ext_resource type="ArrayMesh" uid="uid://cva5pwptccsjt" path="res://3d models/gltf/proper minos/single_mino_Cube_002.res" id="6_v0yb8"]
+[ext_resource type="ArrayMesh" uid="uid://cxcjttr7ef4w7" path="res://3d models/gltf/proper minos/single_mino_Cube_006.res" id="7_j1pr4"]
+[ext_resource type="ArrayMesh" uid="uid://btety5a18d0ty" path="res://3d models/gltf/proper minos/single_mino_Cube.res" id="8_ak4ap"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_geqa2"]
 
 [resource]
 item/0/name = ""
-item/0/mesh = ExtResource("1_2u0md")
+item/0/mesh = SubResource("BoxMesh_geqa2")
 item/0/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 item/0/mesh_cast_shadow = 1
 item/0/shapes = []
