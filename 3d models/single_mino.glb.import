@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dtkuu5y6e8of3"
-path="res://.godot/imported/single_mino.glb-f228c6dbafadea9c5635d44f534e6990.scn"
+uid="uid://1ir6dqky4y8g"
+path="res://.godot/imported/single_mino.glb-fa470c9c98dff7266e90fdab6b0152d0.scn"
 
 [deps]
 
-source_file="res://3d models/gltf/single_mino.glb"
-dest_files=["res://.godot/imported/single_mino.glb-f228c6dbafadea9c5635d44f534e6990.scn"]
+source_file="res://3d models/single_mino.glb"
+dest_files=["res://.godot/imported/single_mino.glb-fa470c9c98dff7266e90fdab6b0152d0.scn"]
 
 [params]
 
@@ -46,7 +46,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://3d models/gltf/proper minos/single_mino_Cube.res",
-"save_to_file/path": "uid://bd7r7h1oj2bqh"
+"save_to_file/path": "uid://btety5a18d0ty"
 },
 "single_mino_Cube_002": {
 "generate/lightmap_uv": 0,
@@ -55,7 +55,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://3d models/gltf/proper minos/single_mino_Cube_002.res",
-"save_to_file/path": "uid://dxrdwp4ypj7dn"
+"save_to_file/path": "uid://cva5pwptccsjt"
 },
 "single_mino_Cube_003": {
 "generate/lightmap_uv": 0,
@@ -64,7 +64,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://3d models/gltf/proper minos/single_mino_Cube_003.res",
-"save_to_file/path": "uid://dv8gl423mxrgf"
+"save_to_file/path": "uid://2vexh1pte6g0"
 },
 "single_mino_Cube_004": {
 "generate/lightmap_uv": 0,
@@ -73,7 +73,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://3d models/gltf/proper minos/single_mino_Cube_004.res",
-"save_to_file/path": "uid://diegpgeab8eps"
+"save_to_file/path": "uid://cvjb2yitniok"
 },
 "single_mino_Cube_005": {
 "generate/lightmap_uv": 0,
@@ -82,7 +82,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://3d models/gltf/proper minos/single_mino_Cube_005.res",
-"save_to_file/path": "uid://cw1kyjihpn1qe"
+"save_to_file/path": "uid://cmqas1k0tv5xg"
 },
 "single_mino_Cube_006": {
 "generate/lightmap_uv": 0,
@@ -91,7 +91,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://3d models/gltf/proper minos/single_mino_Cube_006.res",
-"save_to_file/path": "uid://cwnuys6gwrht4"
+"save_to_file/path": "uid://cxcjttr7ef4w7"
 },
 "single_mino_Cube_007": {
 "generate/lightmap_uv": 0,
@@ -100,7 +100,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://3d models/gltf/proper minos/single_mino_Cube_007.res",
-"save_to_file/path": "uid://cbh6q7fx0c80x"
+"save_to_file/path": "uid://bg6a27ou7clk5"
 },
 "single_mino_Cube_008": {
 "generate/lightmap_uv": 0,
@@ -109,7 +109,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://3d models/gltf/proper minos/single_mino_Cube_008.res",
-"save_to_file/path": "uid://c5aw3nviee76w"
+"save_to_file/path": "uid://dlhl02cww4jqm"
 }
 }
 }

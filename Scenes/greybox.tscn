@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bnfs1xn43j3yu"]
 
-[ext_resource type="MeshLibrary" uid="uid://cn04m5k8tpuo5" path="res://3d models/Mesh Library/minoMinecraft.tres" id="1_brl6h"]
+[ext_resource type="MeshLibrary" uid="uid://cpms8wpkr0sys" path="res://3d models/Mesh Library/scaledminos.tres" id="1_brl6h"]
 [ext_resource type="Script" uid="uid://baxuh6oi160he" path="res://Scripts/ActivePiece.gd" id="2_pyy2d"]
 [ext_resource type="Script" uid="uid://blbgeekrf1j54" path="res://Scripts/CameraRig.gd" id="3_r0nhd"]
 
