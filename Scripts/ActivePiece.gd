@@ -2,10 +2,11 @@
 extends Node3D
 
 signal locked_in_place
+signal piece_locked(cells: Array[Vector3i])
 
 @export var gridmap_path: NodePath = "../GridMap"
 @export var camera_path: NodePath = "../Camera3D"
-@onready var cam: Node = get_node_or_null(camera_path)
+@onready var cam: Camera3D = get_node_or_null(camera_path) as Camera3D
 @export var item_id: int = 1
 
 @export var spawn_cell: Vector3i = Vector3i(0, 5, 0)
@@ -35,17 +36,17 @@ const PIECES = [
 	# I
 	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(2,0,0)],
 	# O
-	[Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,0,1), Vector3i(1,0,1)],
+	[Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,1,0), Vector3i(1,1,0)],
 	# T
-	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,0,1)],
+	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,1,0)],
 	# L
-	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(1,0,1)],
+	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(1,1,0)],
 	# J
-	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(-1,0,1)],
+	[Vector3i(-1,0,0), Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(-1,1,0)],
 	# S
-	[Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,0,1), Vector3i(-1,0,1)],
+	[Vector3i(0,0,0), Vector3i(1,0,0), Vector3i(0,1,0), Vector3i(-1,1,0)],
 	# Z
-	[Vector3i(0,0,0), Vector3i(-1,0,0), Vector3i(0,0,1), Vector3i(1,0,1)],
+	[Vector3i(0,0,0), Vector3i(-1,0,0), Vector3i(0,1,0), Vector3i(1,1,0)],
 ]
 
 func _ready() -> void:
@@ -79,12 +80,18 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.keycode == KEY_E:
 		if _try_rotate(Vector3i(0, 1, 0),  1): # Y CW
 			_cam_snap_yaw(1)
-	elif event.keycode == KEY_R:
-		var d := _clockwise_world_dir()
-		_try_rotate(Vector3i(0, 0, 1), d)
-	elif event.keycode == KEY_F:
-		var d := _clockwise_world_dir()
-		_try_rotate(Vector3i(0, 0, 1), -d)
+	elif event.keycode == KEY_RIGHT:
+		var info: Array = _camera_aligned_axis_sign()
+		var axis: Vector3i = info[0]
+		var sign: int = info[1]
+		# clockwise from the camera’s perspective
+		_try_rotate(axis, -sign)
+	elif event.keycode == KEY_LEFT:
+		var info: Array = _camera_aligned_axis_sign()
+		var axis: Vector3i = info[0]
+		var sign: int = info[1]
+		# counterclockwise from the camera’s perspective
+		_try_rotate(axis, sign)
 	elif event.keycode == KEY_X:
 		_lock_and_spawn()
 
@@ -135,12 +142,40 @@ func _cam_snap_yaw(dir: int) -> void:
 	if cam and cam.has_method("snap_yaw"):
 		cam.call("snap_yaw", dir)
 
+func _camera_aligned_axis_sign() -> Array:
+	# Returns [axis: Vector3i, sign: int] where sign tells which side of that axis the camera is on.
+	# Uses snapped yaw step if available (stable), else falls back to camera position (works, but can flip near diagonals).
+	if cam and cam.has_method("get_base_yaw_step"):
+		var step: int = int(cam.call("get_base_yaw_step")) % 4
+		match step:
+			0: return [Vector3i(0, 0, 1),  1]  # +Z side
+			1: return [Vector3i(1, 0, 0),  1]  # +X side
+			2: return [Vector3i(0, 0, 1), -1]  # -Z side
+			3: return [Vector3i(1, 0, 0), -1]  # -X side
+
+	# Fallback: infer from actual camera position relative to the piece (projected to XZ)
+	if cam == null:
+		return [Vector3i(0, 0, 1), 1]
+
+	var to_cam: Vector3 = cam.global_position - global_position
+	to_cam.y = 0.0
+	if to_cam.length() < 0.001:
+		return [Vector3i(0, 0, 1), 1]
+
+	to_cam = to_cam.normalized()
+	if abs(to_cam.x) > abs(to_cam.z):
+		return [Vector3i(1, 0, 0), 1 if to_cam.x >= 0.0 else -1]
+	else:
+		return [Vector3i(0, 0, 1), 1 if to_cam.z >= 0.0 else -1]
+
 func _lock_and_spawn() -> void:
 	_locked = true
-	emit_signal("locked_in_place")
+	# Send the cells that were just locked in place
+	emit_signal("piece_locked", _piece_cells(pivot_cell, offsets))
 	call_deferred("spawn_new_piece")
 
 func spawn_new_piece() -> void:
+	item_id = randi_range(1, 7)
 	_fall_accum = 0.0
 	_locked = false
 	var new_offsets: Array[Vector3i]
