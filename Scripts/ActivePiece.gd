@@ -80,13 +80,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _try_rotate(Vector3i(0, 1, 0),  1): # Y CW
 			_cam_snap_yaw(1)
 	elif event.keycode == KEY_R:
-		_try_rotate(Vector3i(1, 0, 0),  1) # X CW
+		var d := _clockwise_world_dir()
+		_try_rotate(Vector3i(0, 0, 1), d)
 	elif event.keycode == KEY_F:
-		_try_rotate(Vector3i(1, 0, 0), -1) # X CCW
-	elif event.keycode == KEY_Z:
-		_try_rotate(Vector3i(0, 0, 1),  1) # Z CW
-	elif event.keycode == KEY_C:
-		_try_rotate(Vector3i(0, 0, 1), -1) # Z CCW
+		var d := _clockwise_world_dir()
+		_try_rotate(Vector3i(0, 0, 1), -d)
 	elif event.keycode == KEY_X:
 		_lock_and_spawn()
 
@@ -106,7 +104,34 @@ func _rot_y_steps(v: Vector3i, steps: int) -> Vector3i:
 		3: return Vector3i(-z, v.y, x)     # -90°
 		_: return v
 
+func _clockwise_world_dir() -> int:
+	# Returns +1 or -1 such that rotating around WORLD +Y by that dir
+	# looks "clockwise" from the camera's perspective.
+
+	var cam3d: Camera3D = cam as Camera3D
+	if cam3d == null:
+		return -1
+
+	var f: Vector3 = -cam3d.global_transform.basis.z # camera forward
+	var r: Vector3 =  cam3d.global_transform.basis.x # camera right
+
+	# Project to XZ plane
+	f.y = 0.0
+	r.y = 0.0
+	if f.length() < 0.001 or r.length() < 0.001:
+		return -1
+
+	f = f.normalized()
+	r = r.normalized()
+
+	# Compare which 90° rotation maps forward closer to right
+	var f_plus:  Vector3 = Vector3( f.z, 0.0, -f.x) # +90° around Y
+	var f_minus: Vector3 = Vector3(-f.z, 0.0,  f.x) # -90° around Y
+
+	return 1 if f_plus.dot(r) > f_minus.dot(r) else -1
+
 func _cam_snap_yaw(dir: int) -> void:
+	# Only works if your Camera script has snap_yaw(dir)
 	if cam and cam.has_method("snap_yaw"):
 		cam.call("snap_yaw", dir)
 
